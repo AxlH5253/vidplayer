@@ -1,20 +1,54 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Video Feed
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+<ion-content [scrollEvents]="true" (ionScroll)="didScroll($event)">
+   
+  <ion-card *ngFor="let item of feed">
+    <ion-card-content class="ion-no-padding">
+      {{ item.text }}
+      <div *ngIf="item.src" class="bg-black"> 
+        <video #player playsinline preload="auto" (click)="onChangeVideoToPlay(player)">
+          <source [src]="item.src" type="video/mp4" />
+        </video>
+        <div class="bar" *ngIf="currentPlaying && player == currentPlaying">
+          <ion-button (click)="openFullScreen(player, false)" color="light" fill="clear">
+            <ion-icon slot="icon-only" name="easel"></ion-icon>
+          </ion-button>
+          <ion-button (click)="playOnSide(player)" color="light" fill="clear">
+            <ion-icon slot="icon-only" name="open"></ion-icon>
+          </ion-button>
+          <ion-button (click)="setVolume()" color="light" fill="clear">
+            <ion-icon slot="icon-only" [name]="currentPlaying && player.muted ? 'volume-mute' : 'volume-high'"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+   
+   <!-- <div class="sticky-video" #stickyplayer [hidden]="!stickyVideo">
+    <div class="sticky-controls" *ngIf="stickyVideo">
+      <ion-row class="ion-no-padding">
+        <ion-col size="4">
+          <ion-button size="small" (click)="closeSticky()" color="light" fill="clear" class="h-max-content">
+            <ion-icon slot="icon-only" name="close-circle-outline" class="fs-16"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button size="small" (click)="playOrPauseSticky()" color="light" fill="clear" class="h-max-content">
+            <ion-icon slot="icon-only" [name]="stickyPlaying ? 'pause' : 'play'" class="fs-16"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button size="small" (click)="openFullScreen(stickyVideo, true)" color="light"  fill="clear" class="h-max-content">
+            <ion-icon slot="icon-only" name="easel" class="fs-16"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+   </div> -->
 </ion-content>
